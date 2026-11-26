@@ -50,7 +50,7 @@ Option B, GitHub Pages: upload the folder to a GitHub repository, then turn on P
 | Receipt | Works. Shows "Order received", not "paid" |
 | Stamp card | Works on one device only (saved in the browser) |
 | Waiting list, contact form | Works. Details sent to the cafe on WhatsApp |
-| Save bookings and orders to Supabase | **Next step** (not connected yet) |
+| Save bookings, orders, waitlist, contacts to Supabase | Works after you paste your keys (see below) |
 | Automatic payment confirmation (Razorpay) | **Later step** |
 | Staff admin page with login | **Later step** |
 

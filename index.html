@@ -527,6 +527,7 @@
     </section>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
     <section id="ticket-view" hidden>
       <h2>Table request sent</h2>
       <div class="ticket">
@@ -639,6 +640,7 @@
       document.getElementById('t-guests').textContent = b.guests;
       document.getElementById('t-seat').textContent = b.seat;
       waSend('New table booking\nRef: ' + b.ref + '\nName: ' + b.name + '\nPhone: ' + f[1].value + '\nDate: ' + b.date + '\nTime: ' + b.time + '\nGuests: ' + b.guests + '\nSeating: ' + b.seat, 'wa-book');
+      saveRow('bookings', { ref: b.ref, name: b.name, phone: f[1].value, booking_date: b.date, booking_time: b.time, guests: parseInt(b.guests, 10) || 5, seating: b.seat }).then(logErr);
       document.getElementById('ticket-view').hidden = false;
       lastBooking = b;
       document.getElementById('c-name').value = b.name;
@@ -720,6 +722,9 @@
       document.getElementById('r-phone').textContent = phone;
       document.getElementById('r-ref').textContent = lastBooking ? lastBooking.ref : 'Walk-in order';
       document.getElementById('r-date').textContent = new Date().toLocaleString();
+      var itemRows = [];
+      MENU.forEach(function (m, i) { if (qty[i]) itemRows.push({ name: m[0], qty: qty[i], price: m[1] }); });
+      saveRow('orders', { order_no: document.getElementById('r-order').textContent, booking_ref: lastBooking ? lastBooking.ref : null, name: name, phone: phone, items: itemRows, total_inr: total(), status: 'pending_payment' }).then(logErr);
       var wl = [];
       MENU.forEach(function (m, i) { if (qty[i]) wl.push(m[0] + ' x ' + qty[i]); });
       waSend('New order ' + document.getElementById('r-order').textContent + '\n' + wl.join('\n') + '\nTotal: ' + document.getElementById('r-total').textContent + '\nName: ' + name + '\nPhone: ' + phone + '\nBooking: ' + document.getElementById('r-ref').textContent + '\nPayment: UPI, please verify', 'wa-receipt');
@@ -750,6 +755,7 @@
     document.getElementById('contact-form').addEventListener('submit', function (e) {
       e.preventDefault();
       waSend('Contact message\nName: ' + this.elements[0].value + '\nEmail: ' + this.elements[1].value + '\nMessage: ' + this.elements[2].value, 'wa-contact');
+      saveRow('contacts', { name: this.elements[0].value, email: this.elements[1].value, message: this.elements[2].value }).then(logErr);
       showMsg('contact-msg', 'Thanks! We will get back to you soon.');
       this.reset();
     });
@@ -819,6 +825,7 @@
       e.preventDefault();
       var name = document.getElementById('w-name').value.trim();
       waSend('Waiting list\nName: ' + name + '\nPhone: ' + document.getElementById('w-phone').value, 'wa-wait');
+      saveRow('waitlist', { name: name, phone: document.getElementById('w-phone').value }).then(logErr);
       document.getElementById('wait-msg').textContent = 'Thanks ' + name + ', you are on the list. We will contact you when a table is free.';
       this.reset();
     });
@@ -829,6 +836,20 @@
       document.getElementById('news-msg').textContent = 'Thanks for subscribing! You will hear about new items and events.';
       this.reset();
     });
+
+    var SUPABASE_URL = 'https://YOUR-PROJECT.supabase.co';
+    var SUPABASE_ANON_KEY = 'YOUR-ANON-KEY';
+    var db = null;
+    if (window.supabase && SUPABASE_URL.indexOf('YOUR-PROJECT') === -1) {
+      db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+    function saveRow(table, row) {
+      if (!db) return Promise.resolve({ error: null });
+      return db.from(table).insert(row);
+    }
+    function logErr(r) {
+      if (r && r.error) console.error('Save failed:', r.error);
+    }
 
     function waSend(text, targetId) {
       var el = document.getElementById(targetId);
