@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Nest Cafe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --oat: #EADBC8;
+      --espresso: #2E1B10;
+      --moss: #6B4226;
+      --butter: #D9A441;
+      --paper: #F8F1E7;
+      --muted: #7A6353;
+      color-scheme: light;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "Inter", system-ui, sans-serif;
+      background: var(--paper);
+      color: var(--espresso);
+      line-height: 1.6;
+      padding-top: env(safe-area-inset-top, 0px);
+    }
+    :focus-visible { outline: 3px solid var(--butter); outline-offset: 3px; }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .logo {
+      font-family: "Fraunces", Georgia, serif;
+      font-weight: 600;
+      font-size: 1.5rem;
+      color: var(--moss);
+      text-decoration: none;
+    }
+    nav a {
+      color: var(--espresso);
+      text-decoration: none;
+      margin-left: 1.4rem;
+      font-size: 0.95rem;
+    }
+    nav a:hover { color: var(--moss); }
+
+    .hero {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 4rem 1.5rem 5rem;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 3rem;
+      align-items: end;
+    }
+    .hero h1 {
+      font-family: "Fraunces", Georgia, serif;
+      font-weight: 400;
+      font-size: clamp(2.6rem, 6vw, 4.2rem);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+    }
+    .hero p {
+      margin-top: 1.2rem;
+      max-width: 36ch;
+      color: var(--muted);
+      font-size: 1.1rem;
+    }
+    .hours-card {
+      background: var(--oat);
+      border-radius: 4px 40px 4px 40px;
+      padding: 2rem;
+    }
+    .hours-card h2 {
+      font-family: "Fraunces", Georgia, serif;
+      font-weight: 600;
+      font-size: 1.3rem;
+      margin-bottom: 0.8rem;
+    }
+    .hours-card dl { display: grid; grid-template-columns: auto 1fr; gap: 0.3rem 1.2rem; }
+    .hours-card dt { color: var(--muted); }
+    .hours-card dd { text-align: right; }
+
+    section {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+    }
+    section h2 {
+      font-family: "Fraunces", Georgia, serif;
+      font-weight: 400;
+      font-size: 2.2rem;
+      margin-bottom: 2rem;
+    }
+
+    .menu {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+    .menu h3 {
+      font-family: "Fraunces", Georgia, serif;
+      font-weight: 600;
+      font-size: 1.25rem;
+      color: var(--moss);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--oat);
+    }
+    .menu ul { list-style: none; }
+    .menu li {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px dashed #e4d9c6;
+    }
+    .menu li span:last-child { font-weight: 500; white-space: nowrap; }
+    .menu small { display: block; color: var(--muted); font-size: 0.88rem; }
+
+    .visit {
+      background: var(--moss);
+      color: var(--paper);
+      border-radius: 0 0 0 0;
+      max-width: none;
+    }
+    .visit-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+    .visit h2 { color: var(--paper); margin-bottom: 1rem; }
+    .visit p { color: #e6e9d9; }
+    .visit a { color: var(--butter); }
+
+    form { display: grid; gap: 0.9rem; }
+    form input, form textarea {
+      font: inherit;
+      padding: 0.75rem 0.9rem;
+      border: 1px solid #7d8a62;
+      border-radius: 6px;
+      background: var(--paper);
+      color: var(--espresso);
+      width: 100%;
+    }
+    form button {
+      justify-self: start;
+      font: inherit;
+      padding: 0.75rem 1.6rem;
+      background: var(--butter);
+      color: var(--espresso);
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    form button:hover { filter: brightness(1.05); }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    body { font-family: "Manrope", system-ui, sans-serif; }
+    .logo, .hero h1, section h2, .hours-card h2, .menu h3, .event h3, .review cite, .visit h2 {
+      font-family: "Cormorant Garamond", Georgia, serif;
+    }
+    .logo { font-size: 2rem; font-style: italic; }
+    .hero h1 { font-size: clamp(3.2rem, 7vw, 5.4rem); font-weight: 500; font-style: italic; line-height: 1; }
+    section h2 { font-size: 2.8rem; font-weight: 500; }
+    .moods { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 1.2rem; }
+    .mood { font: inherit; padding: 0.8rem 1.5rem; border: 1px solid var(--moss); background: transparent; color: var(--moss); border-radius: 999px; cursor: pointer; }
+    .mood:hover, .mood[aria-pressed="true"] { background: var(--moss); color: var(--paper); }
+    .mood-result { font-family: "Cormorant Garamond", Georgia, serif; font-size: 1.6rem; font-style: italic; min-height: 2em; }
+    .extras { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+    .card-box { background: var(--oat); border-radius: 12px; padding: 1.4rem; }
+    .card-box h3 { font-family: "Cormorant Garamond", Georgia, serif; font-size: 1.5rem; font-weight: 600; color: var(--moss); margin-bottom: 0.5rem; }
+    .stack { display: grid; gap: 0.6rem; margin: 0.6rem 0; }
+    .card-box input, .card-box select { font: inherit; padding: 0.6rem 0.8rem; border: 1px solid #cdbfa6; border-radius: 6px; background: var(--paper); color: var(--espresso); width: 100%; }
+    .inline { display: flex; gap: 0.5rem; align-items: center; font-size: 0.95rem; }
+    .card-box .qr:empty { display: none; }
+    @media (max-width: 900px) { .extras { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 600px) { .extras { grid-template-columns: 1fr; } }
+    .badge {
+      display: inline-block;
+      padding: 0.3rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      background: var(--paper);
+      color: var(--moss);
+      margin-bottom: 1rem;
+    }
+    .badge.closed { color: var(--muted); }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    .tile {
+      height: 180px;
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem;
+      color: var(--paper);
+      font-size: 0.9rem;
+    }
+    .events, .reviews {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .event, .review {
+      border-top: 2px solid var(--butter);
+      padding-top: 1rem;
+    }
+    .event h3, .review cite {
+      font-family: "Fraunces", Georgia, serif;
+      font-weight: 600;
+      font-style: normal;
+      font-size: 1.15rem;
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+    .event time { color: var(--moss); font-size: 0.9rem; }
+    .review p { color: var(--muted); }
+    .booking {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.9rem;
+      max-width: 640px;
+    }
+    .booking label { display: grid; gap: 0.3rem; font-size: 0.92rem; color: var(--muted); }
+    .booking input, .booking select {
+      font: inherit;
+      padding: 0.7rem 0.85rem;
+      border: 1px solid #cdbfa6;
+      border-radius: 6px;
+      background: var(--paper);
+      color: var(--espresso);
+    }
+    .booking .full { grid-column: 1 / -1; }
+    .booking button {
+      justify-self: start;
+      font: inherit;
+      padding: 0.75rem 1.6rem;
+      background: var(--moss);
+      color: var(--paper);
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    .socials a { color: var(--muted); margin: 0 0.6rem; }
+    .msg { margin-top: 0.6rem; min-height: 1.4em; color: var(--moss); font-weight: 500; }
+    .visit .msg { color: var(--butter); }
+    .tile svg { width: 100px; height: 100px; }
+    .photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .photos figure img { width: 100%; height: 260px; object-fit: cover; border-radius: 6px; display: block; }
+    .photos figcaption { color: var(--muted); font-size: 0.9rem; margin-top: 0.4rem; }
+    @media (max-width: 760px) { .photos { grid-template-columns: 1fr; } }
+    .ticket { background: var(--oat); border-radius: 4px 40px 4px 40px; padding: 1.8rem; max-width: 520px; margin-bottom: 1.2rem; }
+    .ticket dl { display: grid; grid-template-columns: auto 1fr; gap: 0.4rem 1.2rem; }
+    .ticket dt { color: var(--muted); }
+    .ticket dd { text-align: right; }
+    .note { color: var(--muted); margin-bottom: 1rem; }
+    .pill { font: inherit; padding: 0.75rem 1.6rem; background: var(--moss); color: var(--paper); border: none; border-radius: 999px; cursor: pointer; }
+    .pill:disabled { opacity: 0.4; cursor: not-allowed; }
+    .order-list { list-style: none; max-width: 560px; margin-bottom: 1rem; }
+    .order-list li { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px dashed #e4d9c6; }
+    .order-list small { color: var(--muted); margin-left: 0.4rem; }
+    .qty { display: flex; align-items: center; gap: 0.6rem; }
+    .qty button { width: 2rem; height: 2rem; border-radius: 50%; border: 1px solid var(--moss); background: var(--paper); color: var(--moss); font: inherit; cursor: pointer; }
+    .total { margin: 1.2rem 0; font-size: 1.1rem; }
+    .qr { background: #fff; display: inline-block; padding: 0.8rem; border-radius: 8px; margin: 1rem 0; }
+    .qr img { display: block; }
+    .cta { margin-top: 1.5rem; display: flex; gap: 0.8rem; flex-wrap: wrap; }
+    a.pill { text-decoration: none; display: inline-block; }
+    .pill.ghost { background: transparent; color: var(--moss); border: 1px solid var(--moss); }
+    .pill:hover { filter: brightness(1.08); }
+    .cust label { display: grid; gap: 0.3rem; max-width: 320px; margin-bottom: 0.8rem; color: var(--muted); font-size: 0.92rem; }
+    .cust input { font: inherit; padding: 0.7rem 0.85rem; border: 1px solid #cdbfa6; border-radius: 6px; background: var(--paper); color: var(--espresso); }
+    @media (max-width: 760px) {
+      .gallery, .events, .reviews, .booking { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 760px) {
+      .hero, .menu, .visit-inner { grid-template-columns: 1fr; }
+      header { flex-direction: column; gap: 0.8rem; }
+      nav a { margin: 0 0.8rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a class="logo" href="#top">Nest Cafe</a>
+    <nav>
+      <a href="#menu">Menu</a>
+      <a href="#order-view">Order <span id="cart-count"></span></a>
+      <a href="#visit">Visit</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <div class="hero">
+      <div>
+        <h1>Slow coffee, warm corners, a place to stay a while.</h1>
+        <p>Small-batch coffee, fresh bakes, and a quiet table for your work or your company. Walk in, sit down, nest.</p>
+        <div class="cta"><a class="pill" href="#book">Book a table</a><a class="pill ghost" href="#order-view">Order online</a></div>
+      </div>
+      <aside class="hours-card" aria-label="Opening hours">
+        <span class="badge" id="open-status">Checking...</span>
+        <h2>Open hours</h2>
+        <dl>
+          <dt>Mon – Fri</dt><dd>7:00 – 19:00</dd>
+          <dt>Saturday</dt><dd>8:00 – 20:00</dd>
+          <dt>Sunday</dt><dd>8:30 – 17:00</dd>
+        </dl>
+      </aside>
+    </div>
+
+    <section id="menu">
+      <h2>Menu</h2>
+      <div class="menu">
+        <div>
+          <h3>Coffee</h3>
+          <ul>
+            <li><span>Espresso<small>Double shot, house blend</small></span><span>₹150</span></li>
+            <li><span>Flat white<small>Silky milk, smooth finish</small></span><span>₹250</span></li>
+            <li><span>Cold brew<small>Steeped 18 hours</small></span><span>₹275</span></li>
+            <li><span>Filter of the day<small>Ask our barista</small></span><span>₹175</span></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Kitchen</h3>
+          <ul>
+            <li><span>Cinnamon bun<small>Baked each morning</small></span><span>₹180</span></li>
+            <li><span>Avocado toast<small>Sourdough, chili, lime</small></span><span>₹500</span></li>
+            <li><span>Lentil soup<small>Served with warm bread</small></span><span>₹420</span></li>
+            <li><span>Banana bread<small>Slice, with butter</small></span><span>₹160</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="mood">
+      <h2>What is your mood today?</h2>
+      <div class="moods">
+        <button class="mood" type="button" data-mood="0">Cozy</button>
+        <button class="mood" type="button" data-mood="1">Focused</button>
+        <button class="mood" type="button" data-mood="2">Adventurous</button>
+      </div>
+      <p id="mood-result" class="mood-result" aria-live="polite">Pick a mood and we will suggest your cup.</p>
+    </section>
+
+    <section id="sweets">
+      <h2>Sweets and bubble tea</h2>
+      <div class="menu">
+        <div>
+          <h3>Cakes, brownies and waffles</h3>
+          <ul>
+            <li><span>Chocolate cake slice<small>Rich and dark, served chilled</small></span><span>₹220</span></li>
+            <li><span>Cheesecake slice<small>New York style, baked fresh</small></span><span>₹320</span></li>
+            <li><span>Fudge brownie<small>Warm, with a crackly top</small></span><span>₹150</span></li>
+            <li><span>Belgian waffle<small>Maple syrup, butter, fruit on request</small></span><span>₹280</span></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Bubble tea</h3>
+          <ul>
+            <li><span>Classic milk tea<small>Black tea, creamy milk, pearls</small></span><span>₹200</span></li>
+            <li><span>Brown sugar boba<small>Slow-cooked pearls, fresh milk</small></span><span>₹240</span></li>
+            <li><span>Mango fruit tea<small>Real mango, lightly sweet</small></span><span>₹220</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="gallery" hidden>
+      <h2>Inside Nest</h2>
+      <div class="gallery">
+        <div class="tile" style="background:#E8D9BF;color:#2B1D16;"><svg viewBox="0 0 160 120" aria-hidden="true"><defs><radialGradient id="sau" cx="50%" cy="45%" r="60%"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d4c4a6"/></radialGradient><linearGradient id="cup" x1="0" x2="1"><stop offset="0" stop-color="#f4efe6"/><stop offset=".5" stop-color="#ffffff"/><stop offset="1" stop-color="#cfc3ad"/></linearGradient></defs><ellipse cx="80" cy="98" rx="62" ry="12" fill="#000" opacity=".18"/><ellipse cx="80" cy="86" rx="58" ry="20" fill="url(#sau)"/><path d="M40 50h70v22c0 20-14 32-35 32s-35-12-35-32z" fill="url(#cup)"/><path d="M108 58q18 4 0 18" fill="none" stroke="#e6dccb" stroke-width="7"/><ellipse cx="75" cy="50" rx="35" ry="10" fill="#c8a27a"/><ellipse cx="75" cy="50" rx="28" ry="7" fill="#f3e3c8"/><path d="M75 46c-8 2-10 8-2 9c8 1 10-6 2-9z" fill="#b98a5e" opacity=".7"/></svg><span>Flat white</span></div>
+        <div class="tile" style="background:#4E5B38;"><svg viewBox="0 0 160 120" aria-hidden="true"><defs><linearGradient id="cb" x1="0" x2="1"><stop offset="0" stop-color="#3a2416"/><stop offset=".5" stop-color="#6b4226"/><stop offset="1" stop-color="#2e1c10"/></linearGradient><linearGradient id="gl" x1="0" x2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".5"/><stop offset=".4" stop-color="#ffffff" stop-opacity=".08"/><stop offset="1" stop-color="#ffffff" stop-opacity=".4"/></linearGradient></defs><ellipse cx="80" cy="108" rx="40" ry="5" fill="#000" opacity=".2"/><rect x="50" y="22" width="60" height="84" rx="6" fill="url(#cb)"/><rect x="56" y="30" width="22" height="20" rx="4" fill="#fff" opacity=".35" transform="rotate(-8 67 40)"/><rect x="84" y="46" width="20" height="18" rx="4" fill="#fff" opacity=".3" transform="rotate(10 94 55)"/><rect x="60" y="68" width="22" height="18" rx="4" fill="#fff" opacity=".25" transform="rotate(-5 71 77)"/><rect x="50" y="22" width="60" height="84" rx="6" fill="url(#gl)"/><rect x="104" y="14" width="6" height="58" rx="3" fill="#E9B949" transform="rotate(12 107 43)"/></svg><span>Cold brew</span></div>
+        <div class="tile" style="background:#C9A36B;color:#2B1D16;"><svg viewBox="0 0 160 120" aria-hidden="true"><defs><radialGradient id="pl" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d6c7ab"/></radialGradient><radialGradient id="bun" cx="45%" cy="40%" r="60%"><stop offset="0" stop-color="#e2b26b"/><stop offset=".7" stop-color="#b87a3c"/><stop offset="1" stop-color="#8a5526"/></radialGradient></defs><ellipse cx="80" cy="70" rx="58" ry="40" fill="url(#pl)"/><ellipse cx="80" cy="66" rx="38" ry="30" fill="url(#bun)"/><path d="M80 64c0-4 4-6 6-4c3 3 1 9-4 9c-6 0-9-6-6-11c4-6 13-6 17-1c5 6 2 16-6 19" fill="none" stroke="#6e3d1a" stroke-width="3" stroke-linecap="round" opacity=".6"/><path d="M58 52q22-12 44 0q-10 6-22 4q-10-2-22-4z" fill="#fff" opacity=".4"/></svg><span>Cinnamon bun</span></div>
+      </div>
+    </section>
+
+    <section id="photos">
+      <h2>Real cups, real mornings</h2>
+      <div class="photos">
+        <figure><img src="images/cafe-latte-pair.jpg" alt="Two lattes with brown sugar sticks on a wooden table"><figcaption>Latte, with brown sugar on the side</figcaption></figure>
+        <figure><img src="images/cafe-heart-latte.jpg" alt="Heart-shaped latte art in a white cup"><figcaption>Our heart latte</figcaption></figure>
+        <figure><img src="images/cafe-coffee-menu.jpg" alt="Grid of coffee drinks with their names"><figcaption>Find your coffee</figcaption></figure>
+      </div>
+    </section>
+
+    <section id="extras">
+      <h2>Small things we do</h2>
+      <div class="extras">
+        <div class="card-box">
+          <h3>Daily special</h3>
+          <p id="special-text"></p>
+        </div>
+        <div class="card-box">
+          <h3>Stamp card</h3>
+          <p>Get a free coffee after 10 stamps. Enter your phone number.</p>
+          <form id="stamp-form" class="stack">
+            <input id="stamp-phone" type="tel" placeholder="Phone number" required>
+            <div><button class="pill" type="submit">Add stamp</button></div>
+          </form>
+          <p id="stamp-msg" class="msg"></p>
+        </div>
+        <div class="card-box">
+          <h3>Build your coffee</h3>
+          <form id="custom-form" class="stack">
+            <select id="c-base"><option value="150">Espresso</option><option value="250">Flat white</option><option value="275">Cold brew</option></select>
+            <select id="c-milk"><option value="0">Whole milk</option><option value="40">Oat milk (+₹40)</option><option value="50">Almond milk (+₹50)</option></select>
+            <select id="c-sugar"><option>No sugar</option><option>Less sugar</option><option selected>Regular sugar</option></select>
+            <label class="inline"><input id="c-shot" type="checkbox"> Extra shot (+₹50)</label>
+            <div><button class="pill" type="submit">Calculate price</button></div>
+          </form>
+          <p id="custom-msg" class="msg"></p>
+        </div>
+        <div class="card-box">
+          <h3>Music corner</h3>
+          <p>Playing at Nest: slow jazz and old favourites. Ask our barista to add your song to the playlist.</p>
+        </div>
+        <div class="card-box" hidden>
+          <h3>Gift a coffee</h3>
+          <form id="gift-form" class="stack">
+            <input id="g-to" placeholder="Recipient name" required>
+            <select id="g-amt"><option value="500">₹500</option><option value="1000">₹1000</option><option value="2000">₹2000</option></select>
+            <div><button class="pill" type="submit">Create gift QR</button></div>
+          </form>
+          <div id="gift-qr" class="qr"></div>
+          <p id="gift-msg" class="msg"></p>
+          <div id="wa-gift"></div>
+        </div>
+        <div class="card-box">
+          <h3>Waiting list</h3>
+          <form id="wait-form" class="stack">
+            <input id="w-name" placeholder="Your name" required>
+            <input id="w-phone" type="tel" placeholder="Phone number" required>
+            <div><button class="pill" type="submit">Join waiting list</button></div>
+          </form>
+          <p id="wait-msg" class="msg"></p>
+          <div id="wa-wait"></div>
+        </div>
+        <div class="card-box" hidden>
+          <h3>Newsletter</h3>
+          <form id="news-form" class="stack">
+            <input id="n-email" type="email" placeholder="Your email" required>
+            <div><button class="pill" type="submit">Subscribe</button></div>
+          </form>
+          <p id="news-msg" class="msg"></p>
+          <div id="wa-news"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="events">
+      <h2>What's on</h2>
+      <div class="events">
+        <div class="event">
+          <time>Every Thursday, 18:30</time>
+          <h3>Open mic night</h3>
+          <p>Bring a song, a poem, or just come and listen.</p>
+        </div>
+        <div class="event">
+          <time>First Saturday of the month</time>
+          <h3>Book club</h3>
+          <p>A relaxed chat over coffee. New members always welcome.</p>
+        </div>
+        <div class="event">
+          <time>Second Sunday of the month</time>
+          <h3>Latte art workshop</h3>
+          <p>Learn the basics with our head barista. Limited seats.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="reviews">
+      <h2>Kind words</h2>
+      <div class="reviews">
+        <figure class="review">
+          <p>"The flat white is the best in the area, and the cinnamon bun is a must."</p>
+          <cite>Riya, regular</cite>
+        </figure>
+        <figure class="review">
+          <p>"My favourite place to work. Quiet, warm, and the Wi-Fi actually works."</p>
+          <cite>Arjun, freelancer</cite>
+        </figure>
+        <figure class="review">
+          <p>"Came for coffee, stayed for the lentil soup. Lovely staff."</p>
+          <cite>Meera, first visit</cite>
+        </figure>
+      </div>
+    </section>
+
+    <section id="book">
+      <h2>Book a table</h2>
+      <form class="booking">
+        <label>Name<input type="text" required></label>
+        <label>Phone<input type="tel" required></label>
+        <label>Date<input type="date" required></label>
+        <label>Time<input type="time" required></label>
+        <label>Guests<select required><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5 or more</option></select></label>
+        <label>Seating<select><option>No preference</option><option>Window</option><option>Quiet corner</option></select></label>
+        <div class="full"><button type="submit">Request table</button><p id="book-msg" role="status" class="msg"></p></div>
+      </form>
+    </section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+    <section id="ticket-view" hidden>
+      <h2>Table request sent</h2>
+      <div class="ticket">
+        <p>Booking ref <strong id="t-ref"></strong></p>
+        <dl>
+          <dt>Name</dt><dd id="t-name"></dd>
+          <dt>Date</dt><dd id="t-date"></dd>
+          <dt>Time</dt><dd id="t-time"></dd>
+          <dt>Guests</dt><dd id="t-guests"></dd>
+          <dt>Seating</dt><dd id="t-seat"></dd>
+        </dl>
+      </div>
+      <p class="note">We will confirm on your phone. Show this ref when you arrive.</p>
+      <div id="wa-book" class="msg"></div>
+      <button class="pill" type="button" data-act="order">Order food for this table</button>
+    </section>
+
+    <section id="order-view">
+      <h2>Your order</h2>
+      <ul class="order-list" id="order-list"></ul>
+      <p class="total">Total <strong id="order-total">₹0</strong></p>
+      <button class="pill" id="pay-btn" type="button" data-act="pay" disabled>Proceed to payment</button>
+    </section>
+
+    <section id="pay-view" hidden>
+      <h2>Pay with UPI</h2>
+      <p>Scan the QR with any UPI app, or pay to <strong>dkamali751@oksbi</strong>.</p>
+      <p class="total">Amount <strong id="pay-amount"></strong></p>
+      <div id="qr" class="qr"></div>
+      <div><div class="cust"><label>Your name<input id="c-name" type="text" required></label><label>Phone number<input id="c-phone" type="tel" required></label></div>
+      <button class="pill" type="button" data-act="paid">I have paid</button></div>
+      <p class="msg" id="paid-msg"></p>
+    </section>
+
+    <section id="receipt-view" hidden>
+      <h2>Order received</h2>
+      <div class="ticket">
+        <p>Order no. <strong id="r-order"></strong></p>
+        <ul class="order-list" id="r-items"></ul>
+        <p class="total">Total <strong id="r-total"></strong></p>
+        <dl>
+          <dt>Name</dt><dd id="r-name"></dd>
+          <dt>Phone</dt><dd id="r-phone"></dd>
+          <dt>Booking</dt><dd id="r-ref"></dd>
+          <dt>Submitted</dt><dd id="r-date"></dd>
+        </dl>
+      </div>
+      <p class="note">Thank you! We will verify your payment and confirm your order shortly. Show this receipt at the counter once confirmed.</p>
+      <div id="wa-receipt" class="msg"></div>
+    </section>
+
+    <div class="visit" id="visit">
+      <div class="visit-inner" style="padding: 3rem 1.5rem;">
+        <div>
+          <h2>Find us</h2>
+          <p>12 Market Lane, Your City</p>
+          <p>Free Wi-Fi and power outlets at every table.</p>
+          <p style="margin-top:0.6rem;"><a href="https://maps.google.com/?q=12+Market+Lane">Open in Google Maps</a></p>
+          <p style="margin-top:1rem;"><a href="tel:+10000000000">+1 000 000 0000</a></p>
+        </div>
+        <div id="contact">
+          <h2>Get in touch</h2>
+          <form id="contact-form">
+            <input type="text" placeholder="Your name" aria-label="Your name" required>
+            <input type="email" placeholder="Your email" aria-label="Your email" required>
+            <textarea rows="3" placeholder="Your message" aria-label="Your message" required></textarea>
+            <button type="submit">Send message</button><p id="contact-msg" role="status" class="msg"></p>
+          <div id="wa-contact"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p class="socials"><a href="#">Instagram</a><a href="#">Facebook</a></p>
+    <p>&copy; 2026 Nest Cafe. Made with care.</p>
+  </footer>
+
+  <script>
+    (function () {
+      // Opening hours: [open, close] in decimal hours, index 0 = Sunday
+      var hours = { 0: [8.5, 17], 1: [7, 19], 2: [7, 19], 3: [7, 19], 4: [7, 19], 5: [7, 19], 6: [8, 20] };
+      var now = new Date();
+      var h = now.getHours() + now.getMinutes() / 60;
+      var range = hours[now.getDay()];
+      var badge = document.getElementById('open-status');
+      if (range && h >= range[0] && h < range[1]) {
+        badge.textContent = 'Open now';
+      } else {
+        badge.textContent = 'Closed right now';
+        badge.classList.add('closed');
+      }
+    })();
+    var MENU = [["Espresso", 150], ["Filter of the day", 175], ["Flat white", 250], ["Cold brew", 275], ["Cinnamon bun", 180], ["Avocado toast", 500], ["Lentil soup", 420], ["Banana bread", 160], ["Chocolate cake slice", 220], ["Cheesecake slice", 320], ["Fudge brownie", 150], ["Belgian waffle", 280], ["Classic milk tea", 200], ["Brown sugar boba", 240], ["Mango fruit tea", 220]];
+    var qty = {};
+    var lastBooking = null;
+
+    function bookTable(form) {
+      var f = form.querySelectorAll('input,select');
+      var b = {
+        ref: 'NC' + Math.floor(1000 + Math.random() * 9000),
+        name: f[0].value, date: f[2].value, time: f[3].value,
+        guests: f[4].value, seat: f[5].value
+      };
+      document.getElementById('t-ref').textContent = b.ref;
+      document.getElementById('t-name').textContent = b.name;
+      document.getElementById('t-date').textContent = b.date;
+      document.getElementById('t-time').textContent = b.time;
+      document.getElementById('t-guests').textContent = b.guests;
+      document.getElementById('t-seat').textContent = b.seat;
+      waSend('New table booking\nRef: ' + b.ref + '\nName: ' + b.name + '\nPhone: ' + f[1].value + '\nDate: ' + b.date + '\nTime: ' + b.time + '\nGuests: ' + b.guests + '\nSeating: ' + b.seat, 'wa-book');
+      document.getElementById('ticket-view').hidden = false;
+      lastBooking = b;
+      document.getElementById('c-name').value = b.name;
+      document.getElementById('c-phone').value = f[1].value;
+      form.reset();
+      document.getElementById('ticket-view').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function show(id) {
+      ['order-view', 'pay-view', 'receipt-view'].forEach(function (v) {
+        document.getElementById(v).hidden = (v !== id);
+      });
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function showOrder() {
+      renderMenu();
+      show('order-view');
+    }
+
+    function renderMenu() {
+      var html = '';
+      MENU.forEach(function (m, i) {
+        var q = qty[i] || 0;
+        html += '<li><span>' + m[0] + ' <small>₹' + m[1] + '</small></span>' +
+          '<span class="qty"><button type="button" data-act="chg" data-arg="' + i + '" data-d="-1" aria-label="Remove one">-</button>' +
+          '<span>' + q + '</span>' +
+          '<button type="button" data-act="chg" data-arg="' + i + '" data-d="1" aria-label="Add one">+</button></span></li>';
+      });
+      document.getElementById('order-list').innerHTML = html;
+      updateTotal();
+    }
+
+    function chg(i, d) {
+      qty[i] = Math.max(0, (qty[i] || 0) + d);
+      renderMenu();
+    }
+
+    function total() {
+      return MENU.reduce(function (s, m, i) { return s + m[1] * (qty[i] || 0); }, 0);
+    }
+
+    function updateTotal() {
+      var t = total();
+      document.getElementById('order-total').textContent = '₹' + t;
+      document.getElementById('pay-btn').disabled = (t === 0);
+      var n = Object.keys(qty).reduce(function (s, k) { return s + (qty[k] || 0); }, 0);
+      document.getElementById('cart-count').textContent = n ? '(' + n + ')' : '';
+    }
+
+    function showPay() {
+      var t = total();
+      if (!t) return;
+      document.getElementById('pay-amount').textContent = '₹' + t;
+      document.getElementById('paid-msg').textContent = '';
+      var upi = 'upi://pay?pa=dkamali751@oksbi&pn=Nest%20Cafe&am=' + t + '&cu=INR&tn=Nest%20Cafe%20order';
+      var qr = qrcode(0, 'M');
+      qr.addData(upi);
+      qr.make();
+      document.getElementById('qr').innerHTML = qr.createImgTag(5, 8);
+      show('pay-view');
+    }
+
+    function paid() {
+      var name = document.getElementById('c-name').value.trim();
+      var phone = document.getElementById('c-phone').value.trim();
+      if (!name || !phone) {
+        document.getElementById('paid-msg').textContent = 'Please add your name and phone number first.';
+        return;
+      }
+      var items = '';
+      MENU.forEach(function (m, i) {
+        if (qty[i]) items += '<li><span>' + m[0] + ' x ' + qty[i] + '</span><span>₹' + (m[1] * qty[i]) + '</span></li>';
+      });
+      document.getElementById('r-items').innerHTML = items;
+      document.getElementById('r-total').textContent = '₹' + total();
+      document.getElementById('r-order').textContent = 'NC' + Math.floor(10000 + Math.random() * 90000);
+      document.getElementById('r-name').textContent = name;
+      document.getElementById('r-phone').textContent = phone;
+      document.getElementById('r-ref').textContent = lastBooking ? lastBooking.ref : 'Walk-in order';
+      document.getElementById('r-date').textContent = new Date().toLocaleString();
+      var wl = [];
+      MENU.forEach(function (m, i) { if (qty[i]) wl.push(m[0] + ' x ' + qty[i]); });
+      waSend('New order ' + document.getElementById('r-order').textContent + '\n' + wl.join('\n') + '\nTotal: ' + document.getElementById('r-total').textContent + '\nName: ' + name + '\nPhone: ' + phone + '\nBooking: ' + document.getElementById('r-ref').textContent + '\nPayment: UPI, please verify', 'wa-receipt');
+      document.getElementById('order-view').hidden = true;
+      document.getElementById('pay-view').hidden = true;
+      document.getElementById('receipt-view').hidden = false;
+      qty = {};
+      updateTotal();
+      document.getElementById('receipt-view').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    document.addEventListener('click', function (e) {
+      var t = e.target.closest('[data-act]');
+      if (!t) return;
+      e.preventDefault();
+      var a = t.getAttribute('data-act');
+      if (a === 'order') showOrder();
+      else if (a === 'pay') showPay();
+      else if (a === 'paid') paid();
+      else if (a === 'chg') chg(parseInt(t.getAttribute('data-arg'), 10), parseInt(t.getAttribute('data-d'), 10));
+    });
+    document.querySelector('.booking').addEventListener('submit', function (e) {
+      e.preventDefault();
+      bookTable(this);
+    });
+    renderMenu();
+    document.querySelector('.booking input[type="date"]').min = new Date().toISOString().slice(0, 10);
+    document.getElementById('contact-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      waSend('Contact message\nName: ' + this.elements[0].value + '\nEmail: ' + this.elements[1].value + '\nMessage: ' + this.elements[2].value, 'wa-contact');
+      showMsg('contact-msg', 'Thanks! We will get back to you soon.');
+      this.reset();
+    });
+
+    var MOODS = [
+      'Cozy: a Flat white with a Fudge brownie. Slow sip, warm bite. Seat: window side.',
+      'Focused: an Espresso or the Filter of the day. Clear and strong, no crash. Seat: quiet corner.',
+      'Adventurous: Mango fruit tea or Brown sugar boba. Something new and sweet. Seat: bar counter.'
+    ];
+    document.querySelectorAll('.mood').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.mood').forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+        this.setAttribute('aria-pressed', 'true');
+        document.getElementById('mood-result').textContent = MOODS[parseInt(this.getAttribute('data-mood'), 10)];
+      });
+    });
+
+    var SPECIALS = ['Cardamom latte', 'Ginger cold brew', 'Mango bubble tea', 'Brown butter waffle', 'Chocolate cheesecake', 'Coconut cold coffee', 'Spiced chai latte'];
+    document.getElementById('special-text').textContent = 'Today: ' + SPECIALS[new Date().getDay()] + '. Ask our team about it.';
+
+    document.getElementById('stamp-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var p = document.getElementById('stamp-phone').value.trim();
+      var msg;
+      try {
+        var n = parseInt(localStorage.getItem('nest-stamps-' + p) || '0', 10) + 1;
+        if (n >= 10) {
+          localStorage.setItem('nest-stamps-' + p, '0');
+          msg = '10 stamps! Your next coffee is free.';
+        } else {
+          localStorage.setItem('nest-stamps-' + p, String(n));
+          msg = 'Stamp added. ' + n + ' of 10 done.';
+        }
+      } catch (err) {
+        msg = 'Stamp could not be saved on this device.';
+      }
+      document.getElementById('stamp-msg').textContent = msg;
+      this.reset();
+    });
+
+    document.getElementById('custom-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var base = document.getElementById('c-base');
+      var milkEl = document.getElementById('c-milk');
+      var shot = document.getElementById('c-shot').checked;
+      var total = parseInt(base.value, 10) + parseInt(milkEl.value, 10) + (shot ? 50 : 0);
+      document.getElementById('custom-msg').textContent = base.options[base.selectedIndex].text + ', ' +
+        milkEl.options[milkEl.selectedIndex].text + ', ' +
+        document.getElementById('c-sugar').value.toLowerCase() + (shot ? ', extra shot' : '') +
+        '. Total ₹' + total + '. Show this to the barista.';
+    });
+
+    document.getElementById('gift-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var to = document.getElementById('g-to').value.trim();
+      var amt = document.getElementById('g-amt').value;
+      var upi = 'upi://pay?pa=dkamali751@oksbi&pn=Nest%20Cafe&am=' + amt + '&cu=INR&tn=' + encodeURIComponent('Gift for ' + to);
+      var qr = qrcode(0, 'M');
+      qr.addData(upi);
+      qr.make();
+      document.getElementById('gift-qr').innerHTML = qr.createImgTag(4, 8);
+      waSend('Gift card request\nTo: ' + to + '\nAmount: Rs ' + amt, 'wa-gift');
+      document.getElementById('gift-msg').textContent = 'Scan and pay ₹' + amt + ' for ' + to + '. Staff will confirm and send the gift card.';
+    });
+
+    document.getElementById('wait-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var name = document.getElementById('w-name').value.trim();
+      waSend('Waiting list\nName: ' + name + '\nPhone: ' + document.getElementById('w-phone').value, 'wa-wait');
+      document.getElementById('wait-msg').textContent = 'Thanks ' + name + ', you are on the list. We will contact you when a table is free.';
+      this.reset();
+    });
+
+    document.getElementById('news-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      waSend('Newsletter signup\nEmail: ' + document.getElementById('n-email').value, 'wa-news');
+      document.getElementById('news-msg').textContent = 'Thanks for subscribing! You will hear about new items and events.';
+      this.reset();
+    });
+
+    function waSend(text, targetId) {
+      var el = document.getElementById(targetId);
+      if (!el) return;
+      el.innerHTML = '<a class="pill" target="_blank" rel="noopener" href="https://wa.me/918248690128?text=' + encodeURIComponent(text) + '">Send on WhatsApp</a>';
+    }
+
+    function showMsg(id, text) {
+      var el = document.getElementById(id);
+      el.textContent = text;
+      setTimeout(function () { el.textContent = ''; }, 6000);
+    }
+  </script>
+</body>
+</html>
